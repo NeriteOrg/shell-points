@@ -18,6 +18,8 @@ contract ShellToken is ERC20, Ownable {
 
     mapping(address => bool) public isAdmin;
 
+    uint256 public totalMultiplier = 10_000;
+
     // address of activity -> multiplier
     // Activities are the contract addresses of Trove Managers, Stability Pools, LP tokens, etc.
     mapping(address => uint) public multiplier; //percentage out of 100
@@ -82,6 +84,10 @@ contract ShellToken is ERC20, Ownable {
 
     function setMultiplier(address activity, uint perc) public onlyOwner {
         multiplier[activity] = perc;
+    }
+
+    function setTotalMultiplier(uint256 _totalMultiplier) public onlyOwner {
+        totalMultiplier = _totalMultiplier;
     }
 }
 

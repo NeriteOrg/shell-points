@@ -240,4 +240,28 @@ contract ShellTokenTest is Test {
             unchecked { ++i; }
         }
     }
+
+    function test_setTotalMultiplier() public {
+        // Default value
+        assertEq(shellToken.totalMultiplier(), 10_000);
+
+        vm.prank(owner);
+        shellToken.setTotalMultiplier(9999);
+
+        assertEq(shellToken.totalMultiplier(), 9999);
+    }
+
+    function test_revert_setTotalMultiplier_notOwner() public {
+        address notOwner = makeAddr("notOwner");
+
+        vm.startPrank(notOwner);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, notOwner));
+        shellToken.setTotalMultiplier(100);
+        vm.stopPrank();
+
+        vm.startPrank(admin);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, admin));
+        shellToken.setTotalMultiplier(100);
+        vm.stopPrank();
+    }
 }
