@@ -11,11 +11,6 @@ contract ShellToken is ERC20, Ownable {
         uint256 amount;
     }
 
-    struct Multiplier {
-        address activity;
-        uint256 multiplier;
-    }
-
     mapping(address => bool) public isAdmin;
 
     // address of activity -> multiplier
@@ -24,7 +19,7 @@ contract ShellToken is ERC20, Ownable {
 
     mapping(address => bool) public allowedToTransfer;
 
-    constructor() ERC20("ShellToken", "SHELL") Ownable(msg.sender) {}
+    constructor() ERC20("Nerite Shell Points", "SHELL") Ownable(msg.sender) {}
 
     function mintShells(address to, uint256 amount) public {
         require(isAdmin[msg.sender], "Not an admin");
@@ -58,16 +53,6 @@ contract ShellToken is ERC20, Ownable {
         return super.transferFrom(from, to, amount);
     }
 
-
-    function getMultipliers(address[] calldata contracts) external view returns (Multiplier[] memory) {
-        Multiplier[] memory multipliers = new Multiplier[](contracts.length);
-        for (uint i; i < contracts.length; ) {
-            multipliers[i] = Multiplier(contracts[i], multiplier[contracts[i]]);
-            unchecked { ++i; }
-        }
-        return multipliers;
-    }
-
     //////////////////////////
     // ONLY OWNER FUNCTIONS //
     //////////////////////////
@@ -78,10 +63,6 @@ contract ShellToken is ERC20, Ownable {
 
     function updateIsAdmin(address user, bool _isAdmin) public onlyOwner {
         isAdmin[user] = _isAdmin;
-    }
-
-    function setMultiplier(address activity, uint perc) public onlyOwner {
-        multiplier[activity] = perc;
     }
 }
 
