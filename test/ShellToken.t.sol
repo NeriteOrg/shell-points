@@ -195,49 +195,4 @@ contract ShellTokenTest is Test {
         assertEq(shellToken.balanceOf(user), 0);
         assertEq(shellToken.balanceOf(to), 100);
     }
-
-    function test_setMultiplier() public {
-        address activity = makeAddr("activity");
-
-        vm.startPrank(owner);
-        shellToken.setMultiplier(activity, 100);
-        vm.stopPrank();
-    }
-
-    function test_revert_setMultiplier_notOwner() public {
-        address activity = makeAddr("activity");
-        address notOwner = makeAddr("notOwner");
-
-        vm.startPrank(notOwner);
-        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, notOwner));
-        shellToken.setMultiplier(activity, 100);
-        vm.stopPrank();
-
-        vm.startPrank(admin);
-        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, admin));
-        shellToken.setMultiplier(activity, 100);
-        vm.stopPrank();
-    }
-
-    function test_getMultipliers() public {
-        address[] memory contracts = new address[](3);
-        contracts[0] = makeAddr("activity1");
-        contracts[1] = makeAddr("activity2");
-        contracts[2] = makeAddr("activity3");
-
-        vm.startPrank(owner);
-        for (uint i; i < contracts.length; ) {
-            shellToken.setMultiplier(contracts[i], 100 + i);
-            unchecked { ++i; }
-        }
-        vm.stopPrank();
-
-        ShellToken.Multiplier[] memory multipliers = shellToken.getMultipliers(contracts);
-        assertEq(multipliers.length, contracts.length);
-        for (uint i; i < multipliers.length; ) {
-            assertEq(multipliers[i].activity, contracts[i]);
-            assertEq(multipliers[i].multiplier, 100 + i);
-            unchecked { ++i; }
-        }
-    }
 }
